@@ -28,9 +28,17 @@ services:
       - 'traefik.enable=true'
       - 'traefik.http.routers.bentopdf.rule=Host(`docker-runner.00069421.xyz`)'
       - 'traefik.http.routers.bentopdf.entrypoints=websecure'
-      - 'traefik.http.services.bentopdf.loadbalancer.server.port=8080'
+      # - 'traefik.http.services.bentopdf.loadbalancer.server.port=8080'
     networks:
       - web
+
+    whoami:
+    image: "containous/whoami"
+    container_name: "simple-service"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`docker-runner.00069420.xyz`)"
+      - "traefik.http.routers.whoami.entrypoints=web"
 
 networks:
   web:

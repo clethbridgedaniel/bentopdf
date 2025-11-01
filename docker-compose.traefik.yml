@@ -32,7 +32,7 @@ services:
     networks:
       - web
 
-    whoami:
+  whoami:
     image: "containous/whoami"
     container_name: "simple-service"
     labels:

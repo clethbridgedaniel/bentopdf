@@ -15,8 +15,6 @@ services:
       - '--providers.docker.exposedbydefault=false'
       - '--entrypoints.web.address=:80'
       - '--entrypoints.websecure.address=:443'
-    networks:
-      - web
 
   bentopdf:
     # simple mode - bentopdf/bentopdf-simple:latest
@@ -28,9 +26,7 @@ services:
       - 'traefik.enable=true'
       - 'traefik.http.routers.bentopdf.rule=Host(`docker-runner.00069421.xyz`)'
       - 'traefik.http.routers.bentopdf.entrypoints=websecure'
-      # - 'traefik.http.services.bentopdf.loadbalancer.server.port=8080'
-    networks:
-      - web
+      - 'traefik.http.services.bentopdf.loadbalancer.server.port=8080'
 
   whoami:
     image: "containous/whoami"
@@ -39,7 +35,3 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.whoami.rule=Host(`docker-runner`)"
       - "traefik.http.routers.whoami.entrypoints=websecure"
-
-networks:
-  web:
-    external: true

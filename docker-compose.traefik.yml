@@ -37,7 +37,7 @@ services:
     container_name: "simple-service"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.whoami.rule=Host(`docker-runner.00069420.xyz`)"
+      - "traefik.http.routers.whoami.rule=Host(`docker-runner`)"
       - "traefik.http.routers.whoami.entrypoints=web"
 
 networks:

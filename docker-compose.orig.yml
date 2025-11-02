@@ -24,7 +24,7 @@ services:
       - "./letsencrypt:/letsencrypt"
     environment:
       - CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN}
-  
+
   bentopdf:
     # simple mode - bentopdf/bentopdf-simple:latest
     # default mode - bentopdf/bentopdf:latest
@@ -34,6 +34,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.bentopdf.rule=Host(`${DNS_HOST}.${DNS_DOMAIN}`)"
-      - "traefik.http.routers.bentopdf.tls.certresolver=myresolver"
+      - "traefik.http.routers.bentopdf.tls.certificatesresolver=myresolver."
+#      - "traefik.http.routers.bentopdf.entrypoints=web" 
       - "traefik.http.routers.bentopdf.entrypoints=websecure"
       - "traefik.http.services.bentopdf.loadbalancer.server.port=8080"

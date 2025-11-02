@@ -1,9 +1,38 @@
 services:
+
+  traefik:
+    image: "traefik:3.5.4"
+    container_name: "traefik"
+    command:
+      - "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.dnschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.dnschallenge.provider=cloudflare"
+#      - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.myresolver.acme.email=cd.consulting@gmail.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./letsencrypt:/letsencrypt"
+    environment:
+      - CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN}
+
   bentopdf:
     # simple mode - bentopdf/bentopdf-simple:latest
     # default mode - bentopdf/bentopdf:latest
     image: bentopdf/bentopdf-simple:latest
     container_name: bentopdf
     restart: unless-stopped
-    ports:
-      - '8080:8080'
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bentopdf.rule=Host(`${DNS_HOST}.${DNS_DOMAIN}`)"
+      - "traefik.http.routers.bentopdf.entrypoints=websecure"
+      - "traefik.http.services.bentopdf.loadbalancer.server.port=8080"
